@@ -1,0 +1,88 @@
+﻿@page
+@model GymMasterPro.Pages.Members.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Member</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Member.FirstName" class="control-label"></label>
+                <input asp-for="Member.FirstName" class="form-control" />
+                <span asp-validation-for="Member.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.lastName" class="control-label"></label>
+                <input asp-for="Member.lastName" class="form-control" />
+                <span asp-validation-for="Member.lastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.Sex" class="control-label"></label>
+                <input asp-for="Member.Sex" class="form-control" />
+                <span asp-validation-for="Member.Sex" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.DateOfBirth" class="control-label"></label>
+                <input asp-for="Member.DateOfBirth" class="form-control" />
+                <span asp-validation-for="Member.DateOfBirth" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.Address" class="control-label"></label>
+                <input asp-for="Member.Address" class="form-control" />
+                <span asp-validation-for="Member.Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.Phone" class="control-label"></label>
+                <input asp-for="Member.Phone" class="form-control" />
+                <span asp-validation-for="Member.Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.Email" class="control-label"></label>
+                <input asp-for="Member.Email" class="form-control" />
+                <span asp-validation-for="Member.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.Notes" class="control-label"></label>
+                <input asp-for="Member.Notes" class="form-control" />
+                <span asp-validation-for="Member.Notes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.TrainerId" class="control-label"></label>
+                <select asp-for="Member.TrainerId" class ="form-control" asp-items="ViewBag.TrainerId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.CreatedAt" class="control-label"></label>
+                <input asp-for="Member.CreatedAt" class="form-control" />
+                <span asp-validation-for="Member.CreatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.UpdateAt" class="control-label"></label>
+                <input asp-for="Member.UpdateAt" class="form-control" />
+                <span asp-validation-for="Member.UpdateAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.CreatedBy" class="control-label"></label>
+                <input asp-for="Member.CreatedBy" class="form-control" />
+                <span asp-validation-for="Member.CreatedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,90 @@
+﻿@page
+@model GymMasterPro.Pages.Trainers.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Trainer</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Trainer.FirstName" class="control-label"></label>
+                <input asp-for="Trainer.FirstName" class="form-control" />
+                <span asp-validation-for="Trainer.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Trainer.lastName" class="control-label"></label>
+                <input asp-for="Trainer.lastName" class="form-control" />
+                <span asp-validation-for="Trainer.lastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Trainer.Sex" class="control-label"></label>
+                <input asp-for="Trainer.Sex" class="form-control" />
+                <span asp-validation-for="Trainer.Sex" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Trainer.DateOfBirth" class="control-label"></label>
+                <input asp-for="Trainer.DateOfBirth" class="form-control" />
+                <span asp-validation-for="Trainer.DateOfBirth" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Trainer.Address" class="control-label"></label>
+                <input asp-for="Trainer.Address" class="form-control" />
+                <span asp-validation-for="Trainer.Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Trainer.Phone" class="control-label"></label>
+                <input asp-for="Trainer.Phone" class="form-control" />
+                <span asp-validation-for="Trainer.Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Trainer.Email" class="control-label"></label>
+                <input asp-for="Trainer.Email" class="form-control" />
+                <span asp-validation-for="Trainer.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Trainer.Salary" class="control-label"></label>
+                <input asp-for="Trainer.Salary" class="form-control" />
+                <span asp-validation-for="Trainer.Salary" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Trainer.Notes" class="control-label"></label>
+                <input asp-for="Trainer.Notes" class="form-control" />
+                <span asp-validation-for="Trainer.Notes" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="Trainer.Id" />
+            <div class="form-group">
+                <label asp-for="Trainer.CreatedAt" class="control-label"></label>
+                <input asp-for="Trainer.CreatedAt" class="form-control" />
+                <span asp-validation-for="Trainer.CreatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Trainer.UpdateAt" class="control-label"></label>
+                <input asp-for="Trainer.UpdateAt" class="form-control" />
+                <span asp-validation-for="Trainer.UpdateAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Trainer.CreatedBy" class="control-label"></label>
+                <input asp-for="Trainer.CreatedBy" class="form-control" />
+                <span asp-validation-for="Trainer.CreatedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
