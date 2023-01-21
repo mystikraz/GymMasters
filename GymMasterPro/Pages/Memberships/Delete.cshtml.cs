@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Entities;
 using GymMasterPro.Data;
 
-namespace GymMasterPro.Pages.Members
+namespace GymMasterPro.Pages.Memberships
 {
     public class DeleteModel : PageModel
     {
@@ -20,40 +20,40 @@ namespace GymMasterPro.Pages.Members
         }
 
         [BindProperty]
-      public Member Member { get; set; } = default!;
+      public Membership Membership { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Members == null)
+            if (id == null || _context.Memberships == null)
             {
                 return NotFound();
             }
 
-            var member = await _context.Members.FirstOrDefaultAsync(m => m.Id == id);
+            var membership = await _context.Memberships.FirstOrDefaultAsync(m => m.Id == id);
 
-            if (member == null)
+            if (membership == null)
             {
                 return NotFound();
             }
             else 
             {
-                Member = member;
+                Membership = membership;
             }
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null || _context.Members == null)
+            if (id == null || _context.Memberships == null)
             {
                 return NotFound();
             }
-            var member = await _context.Members.FindAsync(id);
+            var membership = await _context.Memberships.FindAsync(id);
 
-            if (member != null)
+            if (membership != null)
             {
-                Member = member;
-                _context.Members.Remove(Member);
+                Membership = membership;
+                _context.Memberships.Remove(Membership);
                 await _context.SaveChangesAsync();
             }
 

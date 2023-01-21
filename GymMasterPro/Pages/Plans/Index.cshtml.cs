@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Entities;
 using GymMasterPro.Data;
 
-namespace GymMasterPro.Pages.Members
+namespace GymMasterPro.Pages.Plans
 {
     public class IndexModel : PageModel
     {
@@ -19,14 +19,13 @@ namespace GymMasterPro.Pages.Members
             _context = context;
         }
 
-        public IList<Member> Member { get;set; } = default!;
+        public IList<Plan> Plan { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
-            if (_context.Members != null)
+            if (_context.Plans != null)
             {
-                Member = await _context.Members
-                .Include(m => m.Trainer).ToListAsync();
+                Plan = await _context.Plans.ToListAsync();
             }
         }
     }

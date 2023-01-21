@@ -1,0 +1,67 @@
+﻿@page
+@model GymMasterPro.Pages.Memberships.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Membership</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Membership.MemberId" class="control-label"></label>
+                <select asp-for="Membership.MemberId" class ="form-control" asp-items="ViewBag.MemberId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Membership.PlanId" class="control-label"></label>
+                <select asp-for="Membership.PlanId" class ="form-control" asp-items="ViewBag.PlanId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Membership.StartDate" class="control-label"></label>
+                <input asp-for="Membership.StartDate" class="form-control" />
+                <span asp-validation-for="Membership.StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Membership.EndDate" class="control-label"></label>
+                <input asp-for="Membership.EndDate" class="form-control" />
+                <span asp-validation-for="Membership.EndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Membership.Price" class="control-label"></label>
+                <input asp-for="Membership.Price" class="form-control" />
+                <span asp-validation-for="Membership.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Membership.CreatedAt" class="control-label"></label>
+                <input asp-for="Membership.CreatedAt" class="form-control" />
+                <span asp-validation-for="Membership.CreatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Membership.UpdateAt" class="control-label"></label>
+                <input asp-for="Membership.UpdateAt" class="form-control" />
+                <span asp-validation-for="Membership.UpdateAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Membership.CreatedBy" class="control-label"></label>
+                <input asp-for="Membership.CreatedBy" class="form-control" />
+                <span asp-validation-for="Membership.CreatedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

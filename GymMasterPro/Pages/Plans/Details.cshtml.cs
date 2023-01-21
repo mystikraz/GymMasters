@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Entities;
 using GymMasterPro.Data;
 
-namespace GymMasterPro.Pages.Members
+namespace GymMasterPro.Pages.Plans
 {
     public class DetailsModel : PageModel
     {
@@ -19,23 +19,23 @@ namespace GymMasterPro.Pages.Members
             _context = context;
         }
 
-      public Member Member { get; set; } = default!; 
+      public Plan Plan { get; set; } = default!; 
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Members == null)
+            if (id == null || _context.Plans == null)
             {
                 return NotFound();
             }
 
-            var member = await _context.Members.FirstOrDefaultAsync(m => m.Id == id);
-            if (member == null)
+            var plan = await _context.Plans.FirstOrDefaultAsync(m => m.Id == id);
+            if (plan == null)
             {
                 return NotFound();
             }
             else 
             {
-                Member = member;
+                Plan = plan;
             }
             return Page();
         }

@@ -8,38 +8,36 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Entities;
 using GymMasterPro.Data;
-using Microsoft.AspNetCore.Identity;
 
-namespace GymMasterPro.Pages.Members
+namespace GymMasterPro.Pages.Memberships
 {
     public class EditModel : PageModel
     {
         private readonly GymMasterPro.Data.ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
 
-        public EditModel(GymMasterPro.Data.ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public EditModel(GymMasterPro.Data.ApplicationDbContext context)
         {
             _context = context;
-            _userManager = userManager;
         }
 
         [BindProperty]
-        public Member Member { get; set; } = default!;
+        public Membership Membership { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Members == null)
+            if (id == null || _context.Memberships == null)
             {
                 return NotFound();
             }
 
-            var member =  await _context.Members.FirstOrDefaultAsync(m => m.Id == id);
-            if (member == null)
+            var membership =  await _context.Memberships.FirstOrDefaultAsync(m => m.Id == id);
+            if (membership == null)
             {
                 return NotFound();
             }
-            Member = member;
-           ViewData["TrainerId"] = new SelectList(_context.Trainers, "Id", "FirstName");
+            Membership = membership;
+           ViewData["MemberId"] = new SelectList(_context.Members, "Id", "Address");
+           ViewData["PlanId"] = new SelectList(_context.Plans, "Id", "Name");
             return Page();
         }
 
@@ -52,22 +50,15 @@ namespace GymMasterPro.Pages.Members
                 return Page();
             }
 
-            _context.Attach(Member).State = EntityState.Modified;
-            var loggedInUser = await _userManager.GetUserAsync(User);
-            if (loggedInUser == null)
-            {
-                return Page();
-            }
-            Member.UpdateAt = DateTime.Now;
-            Member.CreatedAt = DateTime.Now;
-            Member.CreatedBy = loggedInUser?.UserName;
+            _context.Attach(Membership).State = EntityState.Modified;
+
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MemberExists(Member.Id))
+                if (!MembershipExists(Membership.Id))
                 {
                     return NotFound();
                 }
@@ -80,9 +71,9 @@ namespace GymMasterPro.Pages.Members
             return RedirectToPage("./Index");
         }
 
-        private bool MemberExists(int id)
+        private bool MembershipExists(int id)
         {
-          return (_context.Members?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Memberships?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

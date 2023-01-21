@@ -1,0 +1,64 @@
+﻿@page
+@model GymMasterPro.Pages.Plans.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Plan</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Plan.Name" class="control-label"></label>
+                <input asp-for="Plan.Name" class="form-control" />
+                <span asp-validation-for="Plan.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Plan.Duration" class="control-label"></label>
+                <input asp-for="Plan.Duration" class="form-control" />
+                <span asp-validation-for="Plan.Duration" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Plan.Price" class="control-label"></label>
+                <input asp-for="Plan.Price" class="form-control" />
+                <span asp-validation-for="Plan.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Plan.Notes" class="control-label"></label>
+                <input asp-for="Plan.Notes" class="form-control" />
+                <span asp-validation-for="Plan.Notes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Plan.CreatedAt" class="control-label"></label>
+                <input asp-for="Plan.CreatedAt" class="form-control" />
+                <span asp-validation-for="Plan.CreatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Plan.UpdateAt" class="control-label"></label>
+                <input asp-for="Plan.UpdateAt" class="form-control" />
+                <span asp-validation-for="Plan.UpdateAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Plan.CreatedBy" class="control-label"></label>
+                <input asp-for="Plan.CreatedBy" class="form-control" />
+                <span asp-validation-for="Plan.CreatedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
