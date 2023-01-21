@@ -10,7 +10,7 @@ using Entities;
 using GymMasterPro.Data;
 using Microsoft.AspNetCore.Identity;
 
-namespace GymMasterPro.Pages.Memberships
+namespace GymMasterPro.Pages.Checkins
 {
     public class EditModel : PageModel
     {
@@ -24,21 +24,21 @@ namespace GymMasterPro.Pages.Memberships
         }
 
         [BindProperty]
-        public Membership Membership { get; set; } = default!;
+        public Checkin Checkin { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Memberships == null)
+            if (id == null || _context.Checkins == null)
             {
                 return NotFound();
             }
 
-            var membership =  await _context.Memberships.FirstOrDefaultAsync(m => m.Id == id);
-            if (membership == null)
+            var checkin =  await _context.Checkins.FirstOrDefaultAsync(m => m.Id == id);
+            if (checkin == null)
             {
                 return NotFound();
             }
-            Membership = membership;
+            Checkin = checkin;
            ViewData["MemberId"] = new SelectList(_context.Members, "Id", "Address");
            ViewData["PlanId"] = new SelectList(_context.Plans, "Id", "Name");
             return Page();
@@ -52,15 +52,16 @@ namespace GymMasterPro.Pages.Memberships
             {
                 return Page();
             }
+
             var loggedInUser = await _userManager.GetUserAsync(User);
             if (loggedInUser == null)
             {
                 return Page();
             }
-            Membership.UpdateAt = DateTime.Now;
-            Membership.CreatedAt = DateTime.Now;
-            Membership.CreatedBy = loggedInUser?.UserName;
-            _context.Attach(Membership).State = EntityState.Modified;
+            Checkin.UpdateAt = DateTime.Now;
+            Checkin.CreatedAt = DateTime.Now;
+            Checkin.CreatedBy = loggedInUser?.UserName;
+            _context.Attach(Checkin).State = EntityState.Modified;
 
             try
             {
@@ -68,7 +69,7 @@ namespace GymMasterPro.Pages.Memberships
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MembershipExists(Membership.Id))
+                if (!CheckinExists(Checkin.Id))
                 {
                     return NotFound();
                 }
@@ -81,9 +82,9 @@ namespace GymMasterPro.Pages.Memberships
             return RedirectToPage("./Index");
         }
 
-        private bool MembershipExists(int id)
+        private bool CheckinExists(int id)
         {
-          return (_context.Memberships?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Checkins?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

@@ -26,6 +26,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Checkins/Index">Checkins</a>
+                        </li>
                         @if (SignInManager.IsSignedIn(User))
                         {
                             <li class="nav-item">
@@ -33,6 +36,12 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Members/Index">Members</a>
+                            </li>
+                             <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Plans/Index">Plans</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Memberships/Index">Memberships</a>
                             </li>
                         }
                     </ul>

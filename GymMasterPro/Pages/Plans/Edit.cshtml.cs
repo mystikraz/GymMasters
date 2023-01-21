@@ -8,16 +8,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Entities;
 using GymMasterPro.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace GymMasterPro.Pages.Plans
 {
     public class EditModel : PageModel
     {
         private readonly GymMasterPro.Data.ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public EditModel(GymMasterPro.Data.ApplicationDbContext context)
+        public EditModel(GymMasterPro.Data.ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         [BindProperty]
@@ -47,7 +50,14 @@ namespace GymMasterPro.Pages.Plans
             {
                 return Page();
             }
-
+            var loggedInUser = await _userManager.GetUserAsync(User);
+            if (loggedInUser == null)
+            {
+                return Page();
+            }
+            Plan.UpdateAt = DateTime.Now;
+            Plan.CreatedAt = DateTime.Now;
+            Plan.CreatedBy = loggedInUser?.UserName;
             _context.Attach(Plan).State = EntityState.Modified;
 
             try

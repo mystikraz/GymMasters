@@ -18,6 +18,7 @@ namespace Entities
         public string Notes { get; set; }
         public int TrainerId { get; set; }
         public virtual Trainer? Trainer { get; set; }
-        public virtual ICollection<Membership> Memberships { get; set; }
+        public virtual ICollection<Membership>? Memberships { get; set; }
+        public virtual ICollection<Checkin>? Checkins { get; set; }
     }
 }
