@@ -20,3 +20,18 @@ html {
 body {
   margin-bottom: 60px;
 }
+.turquoise-color {
+    background: #4cc5cd;
+    padding: 20px;
+    margin: 15px;
+}
+.red-color {
+    background: #e17f90;
+    padding: 20px;
+    margin: 15px;
+}
+.grey-color {
+    background: #868686;
+    padding: 20px;
+    margin: 15px;
+}

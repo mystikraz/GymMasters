@@ -40,14 +40,14 @@ namespace GymMasterPro.Pages.Checkins
             {
                 return Page();
             }
-            var loggedInUser = await _userManager.GetUserAsync(User);
-            if (loggedInUser == null)
-            {
-                return Page();
-            }
+            //var loggedInUser = await _userManager.GetUserAsync(User);
+            //if (loggedInUser == null)
+            //{
+            //    return Page();
+            //}
             Checkin.UpdateAt = DateTime.Now;
             Checkin.CreatedAt = DateTime.Now;
-            Checkin.CreatedBy = loggedInUser?.UserName;
+            //Checkin.CreatedBy = loggedInUser?.UserName;
             _context.Checkins.Add(Checkin);
             await _context.SaveChangesAsync();
 

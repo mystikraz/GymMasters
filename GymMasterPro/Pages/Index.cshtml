@@ -1,10 +1,73 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container">
+    <div class="row">
+        <div class="col turquoise-color">
+            <div class="row">
+                <div class="col text-center text-white">
+                    @Model.TotalMember
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center text-white">
+                    Total Members
+                </div>
+            </div>
+        </div>
+        <div class="col red-color">
+           <div class="row">
+                <div class="col text-center text-white">
+                    @Model.ActiveMembers
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center text-white">
+                    Active Members
+                </div>
+            </div>
+        </div>
+        <div class="col grey-color">
+          <div class="row">
+                <div class="col text-center text-white">
+                    @Model.InActiveMembers
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center text-white">
+                    Inactive Members
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col turquoise-color">
+            <div class="row">
+                <div class="col text-center text-white">
+                    @Model.TotalTrainers
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center text-white">
+                    Total Trainers
+                </div>
+            </div>
+        </div>
+        <div class="col red-color">
+            <div class="row">
+                <div class="col text-center text-white">
+                    @Model.ExpiredMemberShip
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center text-white">
+                    Expired Memberships
+                </div>
+            </div>
+        </div>
+       
+    </div>
 </div>

@@ -1,14 +1,13 @@
 ﻿@page
 @model GymMasterPro.Pages.Checkins.IndexModel
-
+@inject SignInManager<IdentityUser> SignInManager
 @{
     ViewData["Title"] = "Index";
 }
-
-<h1>Index</h1>
+<h1>Checkins</h1>
 
 <p>
-    <a asp-page="Create">Create New</a>
+    <a asp-page="Create">Check In here.</a>
 </p>
 <table class="table">
     <thead>
@@ -24,15 +23,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Checkin[0].Plan)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Checkin[0].CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Checkin[0].UpdateAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Checkin[0].CreatedBy)
             </th>
             <th></th>
         </tr>
@@ -55,18 +45,18 @@
                     @Html.DisplayFor(modelItem => item.Plan.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CreatedAt)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UpdateAt)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreatedBy)
-                </td>
-                <td>
-                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
+                    }
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <a asp-page="./Details" asp-route-id="@item.Id">Details</a>
+                    }
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                    }
                 </td>
             </tr>
         }
