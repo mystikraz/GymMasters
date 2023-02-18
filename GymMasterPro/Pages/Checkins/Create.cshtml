@@ -9,29 +9,35 @@
 
 <h4>Checkin</h4>
 <hr />
+@if (ViewBag.Message is not null)
+{
+    <div class="row">
+        <div class="col-md-4">
+            <span class="alert alert-danger pt-1 pb-1 mb-2">@ViewData["Message"]</span>
+        </div>
+    </div>
+}
 <div class="row">
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Checkin.MemberId" class="control-label"></label>
-                <select asp-for="Checkin.MemberId" class ="form-control" asp-items="ViewBag.MemberId"></select>
+                <select asp-for="Checkin.MemberId" class="form-control" asp-items="ViewBag.MemberId"></select>
             </div>
-            <div class="form-group">
-                <label asp-for="Checkin.PlanId" class="control-label"></label>
-                <select asp-for="Checkin.PlanId" class ="form-control" asp-items="ViewBag.PlanId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="form-group mt-1">
+                <input type="submit" value="CheckIn" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-page="Index">Back to List</a>
+    <a asp-page="Index">Back to Checkin List</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

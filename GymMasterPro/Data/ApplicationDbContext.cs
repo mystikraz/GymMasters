@@ -49,12 +49,6 @@ namespace GymMasterPro.Data
                 .HasForeignKey(m => m.MemberId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.NoAction);
-
-                t.HasOne(m => m.Plan)
-                .WithMany(m => m.Checkins)
-                .HasForeignKey(m => m.PlanId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.NoAction);
             });
         }
     }

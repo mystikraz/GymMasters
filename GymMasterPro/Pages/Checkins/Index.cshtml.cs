@@ -28,7 +28,6 @@ namespace GymMasterPro.Pages.Checkins
                 Checkin = await _context.Checkins
                 .Include(c => c.Member)
                     .ThenInclude(c=>c.Memberships)
-                .Include(c => c.Plan)
                 .Where(x=>x.CreatedAt.Date==DateTime.Today)
                 .ToListAsync();
             }

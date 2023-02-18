@@ -21,9 +21,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Checkin[0].Member)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Checkin[0].Plan)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -40,9 +37,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Member.FirstName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Plan.Name)
                 </td>
                 <td>
                     @if (SignInManager.IsSignedIn(User))
