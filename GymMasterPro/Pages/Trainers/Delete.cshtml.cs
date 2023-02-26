@@ -1,60 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using Entities;
-using GymMasterPro.Data;
+using Services.Interfaces;
 
 namespace GymMasterPro.Pages.Trainers
 {
     public class DeleteModel : PageModel
     {
-        private readonly GymMasterPro.Data.ApplicationDbContext _context;
+        private readonly ITrainerService _trainerService;
 
-        public DeleteModel(GymMasterPro.Data.ApplicationDbContext context)
+        public DeleteModel(ITrainerService trainerService)
         {
-            _context = context;
+            _trainerService = trainerService;
         }
 
         [BindProperty]
-      public Trainer Trainer { get; set; } = default!;
+        public Trainer Trainer { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            if (id == null || _context.Trainers == null)
+            if (id == 0)
             {
                 return NotFound();
             }
 
-            var trainer = await _context.Trainers.FirstOrDefaultAsync(m => m.Id == id);
+            var trainer = await _trainerService.GetById(id);
 
             if (trainer == null)
             {
                 return NotFound();
             }
-            else 
+            else
             {
                 Trainer = trainer;
             }
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostAsync(int id)
         {
-            if (id == null || _context.Trainers == null)
+            if (id == 0)
             {
                 return NotFound();
             }
-            var trainer = await _context.Trainers.FindAsync(id);
+            var trainer = await _trainerService.GetById(id);
 
             if (trainer != null)
             {
                 Trainer = trainer;
-                _context.Trainers.Remove(Trainer);
-                await _context.SaveChangesAsync();
+                await _trainerService.DeleteAsync(id);
             }
 
             return RedirectToPage("./Index");

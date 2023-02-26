@@ -1,26 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Entities;
-using GymMasterPro.Data;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Services.Interfaces;
 
 namespace GymMasterPro.Pages.Checkins
 {
     public class CreateModel : PageModel
     {
-        private readonly GymMasterPro.Data.ApplicationDbContext _context;
+        private readonly ICheckinService _checkinService;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IMemberService _memberService;
 
-        public CreateModel(GymMasterPro.Data.ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public CreateModel(ICheckinService checkinService,
+            UserManager<IdentityUser> userManager,
+            IMemberService memberService)
         {
-            _context = context;
+            _checkinService = checkinService;
             _userManager = userManager;
+            _memberService = memberService;
         }
 
         public IActionResult OnGet()
@@ -29,10 +29,10 @@ namespace GymMasterPro.Pages.Checkins
             return Page();
         }
 
-        private void GetMembers()
+        private async void GetMembers()
         {
-            ViewData["MemberId"] = new SelectList(_context.Members, "Id", "FirstName");
-            //ViewData["PlanId"] = new SelectList(_context.Plans, "Id", "Name");
+            var members = await _memberService.GetMembers();
+            ViewData["MemberId"] = new SelectList(members, "Id", "FirstName");
         }
 
         [BindProperty]
@@ -42,7 +42,7 @@ namespace GymMasterPro.Pages.Checkins
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || _context.Checkins == null || Checkin == null)
+            if (!ModelState.IsValid || Checkin == null)
             {
                 return Page();
             }
@@ -52,14 +52,14 @@ namespace GymMasterPro.Pages.Checkins
             //    return Page();
             //}
 
-            if (_context.Members.Include(x => x.Memberships).Any(x => x.Id == Checkin.MemberId && x.Memberships!.Any(x => x.EndDate < DateTime.Now)))
+            if (await _memberService.CheckIfExpired(Checkin.MemberId))
             {
                 GetMembers();
                 ViewData["Message"] = "Membership is expired for this member.";
                 return Page();
             }
 
-            if (_context.Checkins.Any(x => x.MemberId == Checkin.MemberId && x.CreatedAt.Date == DateTime.Today))
+            if (await _checkinService.AlreadyCheckedIn(Checkin.MemberId))
             {
                 GetMembers();
                 ViewData["Message"] = "You have already checkedid in.";
@@ -68,8 +68,7 @@ namespace GymMasterPro.Pages.Checkins
             Checkin.UpdateAt = DateTime.Now;
             Checkin.CreatedAt = DateTime.Now;
             //Checkin.CreatedBy = loggedInUser?.UserName;
-            _context.Checkins.Add(Checkin);
-            await _context.SaveChangesAsync();
+           _checkinService.SaveAsync(Checkin);
 
             return RedirectToPage("./Index");
         }

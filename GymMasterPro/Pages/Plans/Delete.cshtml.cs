@@ -1,60 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using Entities;
-using GymMasterPro.Data;
+using Services.Interfaces;
 
 namespace GymMasterPro.Pages.Plans
 {
     public class DeleteModel : PageModel
     {
-        private readonly GymMasterPro.Data.ApplicationDbContext _context;
+        private readonly IPlanService _planService;
 
-        public DeleteModel(GymMasterPro.Data.ApplicationDbContext context)
+        public DeleteModel(IPlanService planService)
         {
-            _context = context;
+            _planService = planService;
         }
 
         [BindProperty]
-      public Plan Plan { get; set; } = default!;
+        public Plan Plan { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            if (id == null || _context.Plans == null)
+            if (id == 0)
             {
                 return NotFound();
             }
 
-            var plan = await _context.Plans.FirstOrDefaultAsync(m => m.Id == id);
+            var plan = await _planService.GetById(id);
 
             if (plan == null)
             {
                 return NotFound();
             }
-            else 
+            else
             {
                 Plan = plan;
             }
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostAsync(int id)
         {
-            if (id == null || _context.Plans == null)
+            if (id == 0)
             {
                 return NotFound();
             }
-            var plan = await _context.Plans.FindAsync(id);
+            var plan = await _planService.GetById(id);
 
             if (plan != null)
             {
                 Plan = plan;
-                _context.Plans.Remove(Plan);
-                await _context.SaveChangesAsync();
+                await _planService.DeleteAsync(id);
             }
 
             return RedirectToPage("./Index");

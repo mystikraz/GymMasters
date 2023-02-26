@@ -1,46 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Entities;
-using GymMasterPro.Data;
-using Microsoft.AspNetCore.Identity;
+using Services.Interfaces;
 
 namespace GymMasterPro.Pages.Memberships
 {
     public class EditModel : PageModel
     {
-        private readonly GymMasterPro.Data.ApplicationDbContext _context;
+        private readonly IMembershipService _membershipService;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IMemberService _memberService;
+        private readonly IPlanService _planService;
 
-        public EditModel(GymMasterPro.Data.ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public EditModel(IMembershipService membershipService,
+            UserManager<IdentityUser> userManager,
+            IMemberService memberService,
+            IPlanService planService)
         {
-            _context = context;
+            _membershipService = membershipService;
             _userManager = userManager;
+            _memberService = memberService;
+            _planService = planService;
         }
 
         [BindProperty]
         public Membership Membership { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            if (id == null || _context.Memberships == null)
+            if (id == 0)
             {
                 return NotFound();
             }
 
-            var membership =  await _context.Memberships.FirstOrDefaultAsync(m => m.Id == id);
+            var membership = await _membershipService.GetById(id);
             if (membership == null)
             {
                 return NotFound();
             }
             Membership = membership;
-           ViewData["MemberId"] = new SelectList(_context.Members, "Id", "Address");
-           ViewData["PlanId"] = new SelectList(_context.Plans, "Id", "Name");
+            var members = await _memberService.GetMembers();
+            var plans = await _planService.GetPlans();
+            ViewData["MemberId"] = new SelectList(members, "Id", "FirstName");
+            ViewData["PlanId"] = new SelectList(plans, "Id", "Name");
             return Page();
         }
 
@@ -60,30 +65,10 @@ namespace GymMasterPro.Pages.Memberships
             Membership.UpdateAt = DateTime.Now;
             Membership.CreatedAt = DateTime.Now;
             Membership.CreatedBy = loggedInUser?.UserName;
-            _context.Attach(Membership).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MembershipExists(Membership.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _membershipService.UpdateAsync(Membership.Id, Membership);
 
             return RedirectToPage("./Index");
-        }
-
-        private bool MembershipExists(int id)
-        {
-          return (_context.Memberships?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

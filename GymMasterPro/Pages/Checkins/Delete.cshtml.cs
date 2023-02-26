@@ -1,60 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using Entities;
-using GymMasterPro.Data;
+using Services.Interfaces;
 
 namespace GymMasterPro.Pages.Checkins
 {
     public class DeleteModel : PageModel
     {
-        private readonly GymMasterPro.Data.ApplicationDbContext _context;
+        private readonly ICheckinService _checkinService;
 
-        public DeleteModel(GymMasterPro.Data.ApplicationDbContext context)
+        public DeleteModel(ICheckinService checkinService)
         {
-            _context = context;
+            _checkinService = checkinService;
         }
 
         [BindProperty]
-      public Checkin Checkin { get; set; } = default!;
+        public Checkin Checkin { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            if (id == null || _context.Checkins == null)
+            if (id == 0)
             {
                 return NotFound();
             }
 
-            var checkin = await _context.Checkins.FirstOrDefaultAsync(m => m.Id == id);
+            var checkin = await _checkinService.GetById(id);
 
             if (checkin == null)
             {
                 return NotFound();
             }
-            else 
+            else
             {
                 Checkin = checkin;
             }
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostAsync(int id)
         {
-            if (id == null || _context.Checkins == null)
+            if (id == 0)
             {
                 return NotFound();
             }
-            var checkin = await _context.Checkins.FindAsync(id);
+            var checkin = await _checkinService.GetById(id);
 
             if (checkin != null)
             {
                 Checkin = checkin;
-                _context.Checkins.Remove(Checkin);
-                await _context.SaveChangesAsync();
+                await _checkinService.DeleteAsync(id);
             }
 
             return RedirectToPage("./Index");

@@ -1,46 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Entities;
-using GymMasterPro.Data;
-using Microsoft.AspNetCore.Identity;
+using Services.Interfaces;
 
 namespace GymMasterPro.Pages.Checkins
 {
     public class EditModel : PageModel
     {
-        private readonly GymMasterPro.Data.ApplicationDbContext _context;
+        private readonly ICheckinService _checkinService;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IMemberService _memberService;
+        private readonly IPlanService _planService;
 
-        public EditModel(GymMasterPro.Data.ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public EditModel(ICheckinService checkinService,
+            UserManager<IdentityUser> userManager,
+            IMemberService memberService,
+            IPlanService planService)
         {
-            _context = context;
+            _checkinService = checkinService;
             _userManager = userManager;
+            _memberService = memberService;
+            _planService = planService;
         }
 
         [BindProperty]
         public Checkin Checkin { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            if (id == null || _context.Checkins == null)
+            if (id == 0)
             {
                 return NotFound();
             }
 
-            var checkin =  await _context.Checkins.FirstOrDefaultAsync(m => m.Id == id);
+            var checkin = await _checkinService.GetById(id);
             if (checkin == null)
             {
                 return NotFound();
             }
             Checkin = checkin;
-           ViewData["MemberId"] = new SelectList(_context.Members, "Id", "Address");
-           ViewData["PlanId"] = new SelectList(_context.Plans, "Id", "Name");
+            var members = await _memberService.GetMembers();
+            var plans = await _planService.GetPlans();
+            ViewData["MemberId"] = new SelectList(members, "Id", "Address");
+            ViewData["PlanId"] = new SelectList(plans, "Id", "Name");
             return Page();
         }
 
@@ -61,30 +66,9 @@ namespace GymMasterPro.Pages.Checkins
             Checkin.UpdateAt = DateTime.Now;
             Checkin.CreatedAt = DateTime.Now;
             Checkin.CreatedBy = loggedInUser?.UserName;
-            _context.Attach(Checkin).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CheckinExists(Checkin.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _checkinService.SaveAsync(Checkin);
 
             return RedirectToPage("./Index");
-        }
-
-        private bool CheckinExists(int id)
-        {
-          return (_context.Checkins?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

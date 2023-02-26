@@ -1,24 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Entities;
-using GymMasterPro.Data;
-using Microsoft.AspNetCore.Identity;
+using Services.Interfaces;
 
 namespace GymMasterPro.Pages.Plans
 {
     public class CreateModel : PageModel
     {
-        private readonly GymMasterPro.Data.ApplicationDbContext _context;
+        private readonly IPlanService _planService;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public CreateModel(GymMasterPro.Data.ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public CreateModel(IPlanService planService, UserManager<IdentityUser> userManager)
         {
-            _context = context;
+            _planService = planService;
             _userManager = userManager;
         }
 
@@ -29,12 +24,12 @@ namespace GymMasterPro.Pages.Plans
 
         [BindProperty]
         public Plan Plan { get; set; } = default!;
-        
+
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Plans == null || Plan == null)
+            if (!ModelState.IsValid || Plan == null)
             {
                 return Page();
             }
@@ -46,8 +41,7 @@ namespace GymMasterPro.Pages.Plans
             Plan.UpdateAt = DateTime.Now;
             Plan.CreatedAt = DateTime.Now;
             Plan.CreatedBy = loggedInUser?.UserName;
-            _context.Plans.Add(Plan);
-            await _context.SaveChangesAsync();
+            await _planService.SaveAsync(Plan);
 
             return RedirectToPage("./Index");
         }

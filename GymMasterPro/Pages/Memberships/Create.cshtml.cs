@@ -1,31 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Entities;
-using GymMasterPro.Data;
-using Microsoft.AspNetCore.Identity;
+using Services.Interfaces;
 
 namespace GymMasterPro.Pages.Memberships
 {
     public class CreateModel : PageModel
     {
-        private readonly GymMasterPro.Data.ApplicationDbContext _context;
+        private readonly IMembershipService _membershipService;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IPlanService _planService;
+        private readonly IMemberService _memberService;
 
-        public CreateModel(GymMasterPro.Data.ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public CreateModel(IMembershipService membershipService,
+            UserManager<IdentityUser> userManager,
+            IPlanService planService,
+            IMemberService memberService)
         {
-            _context = context;
+            _membershipService = membershipService;
             _userManager = userManager;
+            _planService = planService;
+            _memberService = memberService;
         }
 
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGet()
         {
-            ViewData["MemberId"] = new SelectList(_context.Members, "Id", "FirstName");
-            ViewData["PlanId"] = new SelectList(_context.Plans, "Id", "Name");
+            var members = await _memberService.GetMembers();
+            var plans = await _planService.GetPlans();
+            ViewData["MemberId"] = new SelectList(members, "Id", "FirstName");
+            ViewData["PlanId"] = new SelectList(plans, "Id", "Name");
             return Page();
         }
 
@@ -36,7 +41,7 @@ namespace GymMasterPro.Pages.Memberships
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || _context.Memberships == null || Membership == null)
+            if (!ModelState.IsValid || Membership == null)
             {
                 return Page();
             }
@@ -48,8 +53,7 @@ namespace GymMasterPro.Pages.Memberships
             Membership.UpdateAt = DateTime.Now;
             Membership.CreatedAt = DateTime.Now;
             Membership.CreatedBy = loggedInUser?.UserName;
-            _context.Memberships.Add(Membership);
-            await _context.SaveChangesAsync();
+            await _membershipService.SaveAsync(Membership);
 
             return RedirectToPage("./Index");
         }

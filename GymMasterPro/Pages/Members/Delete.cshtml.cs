@@ -1,35 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using Entities;
-using GymMasterPro.Data;
+using Services.Interfaces;
 
 namespace GymMasterPro.Pages.Members
 {
     public class DeleteModel : PageModel
     {
-        private readonly GymMasterPro.Data.ApplicationDbContext _context;
+        private readonly IMemberService _memberService;
 
-        public DeleteModel(GymMasterPro.Data.ApplicationDbContext context)
+        public DeleteModel(IMemberService memberService)
         {
-            _context = context;
+            _memberService = memberService;
         }
 
         [BindProperty]
       public Member Member { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            if (id == null || _context.Members == null)
+            if (id == 0 || await _memberService.GetMembers() == null)
             {
                 return NotFound();
             }
 
-            var member = await _context.Members.FirstOrDefaultAsync(m => m.Id == id);
+            var member = await _memberService.GetMemberById(id);
 
             if (member == null)
             {
@@ -42,19 +37,18 @@ namespace GymMasterPro.Pages.Members
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostAsync(int id)
         {
-            if (id == null || _context.Members == null)
+            if (id == 0 || await _memberService.GetMembers() == null)
             {
                 return NotFound();
             }
-            var member = await _context.Members.FindAsync(id);
+            var member = await _memberService.GetMemberById(id);
 
             if (member != null)
             {
                 Member = member;
-                _context.Members.Remove(Member);
-                await _context.SaveChangesAsync();
+                await _memberService.DeleteAsync(id);
             }
 
             return RedirectToPage("./Index");

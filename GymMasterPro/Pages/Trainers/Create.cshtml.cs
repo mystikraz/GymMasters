@@ -1,24 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Entities;
-using GymMasterPro.Data;
-using Microsoft.AspNetCore.Identity;
+using Services.Interfaces;
 
 namespace GymMasterPro.Pages.Trainers
 {
     public class CreateModel : PageModel
     {
-        private readonly GymMasterPro.Data.ApplicationDbContext _context;
+        private readonly ITrainerService _trainerService;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public CreateModel(GymMasterPro.Data.ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public CreateModel(ITrainerService trainerService, UserManager<IdentityUser> userManager)
         {
-            _context = context;
+            _trainerService = trainerService;
             _userManager = userManager;
         }
 
@@ -34,7 +29,7 @@ namespace GymMasterPro.Pages.Trainers
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || _context.Trainers == null || Trainer == null)
+            if (!ModelState.IsValid || Trainer == null)
             {
                 return Page();
             }
@@ -47,8 +42,7 @@ namespace GymMasterPro.Pages.Trainers
             Trainer.CreatedAt = DateTime.Now;
             Trainer.CreatedBy = loggedInUser?.UserName;
 
-            _context.Trainers.Add(Trainer);
-            await _context.SaveChangesAsync();
+            await _trainerService.SaveAsync(Trainer);
 
             return RedirectToPage("./Index");
         }

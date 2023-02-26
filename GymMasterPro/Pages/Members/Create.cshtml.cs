@@ -1,41 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Entities;
-using GymMasterPro.Data;
-using Microsoft.AspNetCore.Identity;
+using Services.Interfaces;
 
 namespace GymMasterPro.Pages.Members
 {
     public class CreateModel : PageModel
     {
-        private readonly GymMasterPro.Data.ApplicationDbContext _context;
+        private readonly IMemberService _memberService;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly ITrainerService _trainerService;
 
-        public CreateModel(GymMasterPro.Data.ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public CreateModel(IMemberService memberService,
+            UserManager<IdentityUser> userManager,
+            ITrainerService trainerService)
         {
-            _context = context;
+            _memberService = memberService;
             _userManager = userManager;
+            _trainerService = trainerService;
         }
 
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGet()
         {
-        ViewData["TrainerId"] = new SelectList(_context.Trainers, "Id", "FirstName");
+            var trainers = await _trainerService.GetTrainers();
+            ViewData["TrainerId"] = new SelectList(trainers, "Id", "FirstName");
             return Page();
         }
 
         [BindProperty]
         public Member Member { get; set; } = default!;
-        
+
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Members == null || Member == null)
+            if (!ModelState.IsValid || Member == null)
             {
                 return Page();
             }
@@ -47,8 +48,8 @@ namespace GymMasterPro.Pages.Members
             Member.UpdateAt = DateTime.Now;
             Member.CreatedAt = DateTime.Now;
             Member.CreatedBy = loggedInUser?.UserName;
-            _context.Members.Add(Member);
-            await _context.SaveChangesAsync();
+
+            await _memberService.SaveAsync(Member);
 
             return RedirectToPage("./Index");
         }
