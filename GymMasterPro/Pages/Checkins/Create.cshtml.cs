@@ -68,7 +68,7 @@ namespace GymMasterPro.Pages.Checkins
             Checkin.UpdateAt = DateTime.Now;
             Checkin.CreatedAt = DateTime.Now;
             //Checkin.CreatedBy = loggedInUser?.UserName;
-           _checkinService.SaveAsync(Checkin);
+            await _checkinService.SaveAsync(Checkin);
 
             return RedirectToPage("./Index");
         }

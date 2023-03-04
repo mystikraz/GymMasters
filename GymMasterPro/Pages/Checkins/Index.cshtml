@@ -27,7 +27,7 @@
     <tbody>
         @foreach (var item in Model.Checkin)
         {
-            var status = item.Member.Memberships.FirstOrDefault().EndDate > DateTime.Now ? "Active" : "Expired";
+            var status = item.Member.Memberships?.FirstOrDefault()?.EndDate > DateTime.Now ? "Active" : "Expired";
             <tr>
                 <td>
                     @status

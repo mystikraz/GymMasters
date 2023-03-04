@@ -26,11 +26,12 @@ namespace Services
             return await _repository.GetAll().Include(m => m.Memberships)
                                                 .CountAsync(m => m.Memberships!.Any(ms => ms.EndDate > DateTime.Now));
         }
-        public async Task<int> GetExpiredMembers()
+        public async Task<IEnumerable<Member>> GetExpiredMembers()
         {
             return await _repository.GetAll().Include(m => m.Memberships)
-                                                .CountAsync(m => m.Memberships!.Any(ms => ms.EndDate < DateTime.Now));
+                                                .Where(m => m.Memberships!.Any(ms => ms.EndDate < DateTime.Now)).ToListAsync();
         }
+
         public async Task<int> GetInactiveMembers()
         {
             return await _repository.GetAll().Include(m => m.Checkins)

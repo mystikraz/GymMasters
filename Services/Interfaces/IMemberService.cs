@@ -12,7 +12,7 @@ namespace Services.Interfaces
         Task<bool> CheckIfExpired(int memberId);
         Task<int> GetMembersCount();
         Task<int> GetActiveMembers();
-        Task<int> GetExpiredMembers();
+        Task<IEnumerable<Member>> GetExpiredMembers();
         Task<int> GetInactiveMembers();
     }
 }
